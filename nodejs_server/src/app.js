@@ -2,7 +2,7 @@
 var crypto = require('crypto');
 var randstr = require('js-randstr');
 
-const SERVER_VER = '180609';
+const SERVER_VER = '180609 - node';
 const ONLINE_ERR = {"type": "err", "msg": "There is another device online. Please retry."};
 const TYPE_ERR = {"type": "err", "msg": "Type Error"};
 const INVALID_ERR = {"type": "info", "msg": "Invalid reciver: "};
