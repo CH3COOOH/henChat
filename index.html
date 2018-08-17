@@ -2,7 +2,7 @@
 <style>
 #log{
 	width: 100%;
-	height: 300px;
+	height: 425px;
 	overflow: auto;
 }
 </style>
@@ -30,14 +30,13 @@
 </head>
 
 <body>
-<script src="./jsRSA.js"></script>
 <table width="100%" border="0" id="container">
   <tr>
     <td width="20%" height="100%" bgcolor="#CCCCCC">Receiver</td>
     <td height="100%" align="center" bgcolor="#999999">Message</td>
   </tr>
   <tr>
-    <td width="20%" height="300" align="left" valign="top" bgcolor="#CCCCCC"><textarea name="s_to" cols="16" rows="20" class="form_input" id="s_to"></textarea></td>
+    <td width="20%" height="300" align="left" valign="top" bgcolor="#CCCCCC"><textarea name="s_to" cols="16" rows="28" class="form_input" id="s_to"></textarea></td>
 	<td height="300" align="left" valign="top" bgcolor="#FBFBFB" >
     	<div id="log"></div>
 	</td>
@@ -73,6 +72,8 @@
     <td height="100%" bgcolor="#CCCCCC"><input name="file" type="file" id="fileSelector"></td>
   </tr>
 </table>
-<script src="./hc-core.js"></script>
+<script src="js/rsa.js"></script>
+<script src="js/hc-core.js"></script>
+<script src="js/listener.js"></script>
 </body>
 </html>
