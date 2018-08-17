@@ -9,6 +9,7 @@
 # 2018.03.01: Multi-tag support (keep the coming message(json)'s key); can send small images
 # 2018.03.02: Now can send sliced data (big files supported)
 # 2018.03.05: Add user whitelist mode
+# 2018.08.16: Shorten the PBK
 
 import time
 import hashlib
@@ -17,16 +18,15 @@ import json
 from websocket_server import WebsocketServer
 import azLib as al
 
-SERVER_VER = '180405'
+SERVER_VER = '180816'
 MAX_ONLINE = 15
 WHITELIST = []				# Client(sha-1) in WHITELIST would not be limited by MAX_ONLINE
-OFFLINE_BUFFER_LEN = 20
 
 
 def randStr(length):
 	from random import choice
-	strLib = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&()=-~^|/*_?<>'
-	return ''.join(choice(strLib) for _ in xrange(length))
+	randPool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&*?@~-'
+	return ''.join(choice(randPool) for _ in xrange(length))
 
 
 class HCS:
@@ -44,14 +44,6 @@ class HCS:
 			if cid == i:
 				return self.onlineLst[i][0]
 		return None
-
-
-	# def _wordBlock(self, rawText, blockLst):
-	# 	handled = rawText
-	# 	for w in blockLst:
-	# 		if w in handled:
-	# 			handled = handled.replace(w, '*'*len(w))
-	# 	return handled
 
 
 	def _reply(self, server, typE, content, reciver):
@@ -97,7 +89,7 @@ class HCS:
 			if d_msg['type'] == 'login':
 
 				pvk = d_msg['msg']
-				cid = hashlib.sha1(pvk).hexdigest()
+				cid = hashlib.sha1(pvk).hexdigest()[:10]
 
 				if (self.online_total < MAX_ONLINE) or (cid in WHITELIST):
 					
@@ -127,12 +119,11 @@ class HCS:
 			
 			elif d_msg['type'] == 'msg':
 				# ===== Man page of type 'msg' ===
-				# When a new message comes, the server does not change its contend but delete key 'token' and 'to'.
+				# When a new message comes, the server does not change its content but delete key 'token' and 'to'.
 				# Thus it is safe to send 'msg' with any new keys.
 				# ================================
 
 				if d_msg['from'] in self.onlineLst.keys() and d_msg['token'] == self.onlineLst[d_msg['from']][1]:
-
 					# Sender identify passed
 					# content = {'from': d_msg['from'],
 					# 			'type': 'msg',
@@ -148,7 +139,7 @@ class HCS:
 					for cid in d_msg['to']:
 
 						# Invalid address
-						if len(cid) != 40 or cid == client['id']:
+						if len(cid) != 10 or cid == client['id']:
 							self._reply(server, 'info', 'Invalid reciver: %s' % cid, client)
 							continue
 
@@ -177,7 +168,6 @@ class HCS:
 							server.send_message(client, json.dumps(reply))
 
 				else:
-
 					# Sender identify failed
 					al.log('%s is an invalid token.' % d_msg['token'])
 					self._reply(server, 'err', 'Auth failed.', client)

@@ -1,4 +1,11 @@
 <html>
+<style>
+#log{
+	width: 100%;
+	height: 300px;
+	overflow: auto;
+}
+</style>
 <head>
 	<title>henChat</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
@@ -23,42 +30,49 @@
 </head>
 
 <body>
-<table width="100%" border="0">
-  <tr align="left" valign="top">
-    <td width="10"><div align="right">PVK</div></td>
-    <td width="1603"><input type="text" class="form_input" id="s_pvk" maxlength="64",></td>
-  </tr>
-  <tr align="left" valign="top">
-    <td width="10"><div align="right">PBK</div></td>
-    <td><input type="text" disabled class="form_input" id="s_pbk"></td>
-  </tr>
-  <tr align="left" valign="top">
-    <td width="10"><div align="right">To</div></td>
-    <td><textarea rows="3" class="form_input" id="s_to"></textarea></td>
-  </tr>
-  <tr align="left" valign="top">
-    <td width="10"><div align="right">Msg</div></td>
-    <td><textarea rows="3" class="form_input" id="s_send"></textarea></td>
-  </tr>
-  <tr align="left" valign="top">
-    <td width="10" nowrap>&nbsp;</td>
-  <td nowrap><input name="file" type="file" id="fileSelector"></td>
+<script src="./jsRSA.js"></script>
+<table width="100%" border="0" id="container">
+  <tr>
+    <td width="20%" height="100%" bgcolor="#CCCCCC">Receiver</td>
+    <td height="100%" align="center" bgcolor="#999999">Message</td>
   </tr>
   <tr>
-    <td colspan="2" nowrap>
-		<button id="btn_auto">New ID</button>
-		<button id="btn_enter">Login</button>
-		<button id="btn_encrypt" title="End-to-end encryption">ETE</button>
-		<button id="btn_close">Logout</button>
-		<button id="btn_send" title="Ctrl+Enter can work too">Send</button>
+    <td width="20%" height="300" align="left" valign="top" bgcolor="#CCCCCC"><textarea name="s_to" cols="16" rows="20" class="form_input" id="s_to"></textarea></td>
+	<td height="300" align="left" valign="top" bgcolor="#FBFBFB" >
+    	<div id="log"></div>
 	</td>
   </tr>
   <tr>
-    <td colspan="2" height=auto; align="left" valign="top" id="log" style="word-break:break-all;word-break:break-all"></td>
+    <td width="20%" height="100%" align="right" valign="top" bgcolor="#CCCCCC">PVK</td>
+    <td height="100%" align="left" valign="top" bgcolor="#CCCCCC"><input type="text" class="form_input" id="s_pvk" maxlength="64",></td>
+  </tr>
+  <tr>
+    <td width="20%" height="100%" align="right" valign="top" bgcolor="#CCCCCC">PBK</td>
+    <td height="100%" align="left" valign="top" bgcolor="#CCCCCC"><input type="text" disabled class="form_input" id="s_pbk"></td>
+  </tr>
+  <tr>
+    <td width="20%" height="100%" align="right" valign="top" bgcolor="#CCCCCC">Option</td>
+    <td height="100%" align="left" valign="top" nowrap bgcolor="#CCCCCC"><button id="btn_auto">NewID</button>
+      <button id="btn_enter">Login</button>
+      <button id="btn_encrypt" title="End-to-end encryption">ETE</button>
+    <button id="btn_close">Logout</button></td>
+  </tr>
+  <tr>
+    <td width="20%" height="100%" align="right" valign="top" bgcolor="#CCCCCC">Msg</td>
+    <td height="100%" align="center" bgcolor="#CCCCCC">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td width="100%" nowrap><textarea name="s_send" rows="4" class="form_input" id="s_send"></textarea></td>
+            <td nowrap><button id="btn_send" title="Ctrl+Enter can work too">Send</button></td>
+          </tr>
+        </table>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" height="100%" align="right" valign="top" bgcolor="#CCCCCC">Attach</td>
+    <td height="100%" bgcolor="#CCCCCC"><input name="file" type="file" id="fileSelector"></td>
   </tr>
 </table>
-
-<script src="./jsRSA.js"></script>
 <script src="./hc-core.js"></script>
 </body>
 </html>

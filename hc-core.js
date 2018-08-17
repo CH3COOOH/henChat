@@ -4,8 +4,9 @@
 // 2018.03.18: Add auto-gen mode; "control-enter" support
 // 2018.04.05: End-to-end encryption realized (plain text only)
 // 2018.04.06: ETE now supports attachements; add key hash comparision (MITM block)
+// 2018.08.16: Prevent repeat click on login and newid button
 
-var CLIENT_VER = '180406 - ETE plus';
+var CLIENT_VER = '180816';
 
 var DEFAULT_SERVER = 'wss://us2.srdmobile.tk';
 
@@ -22,7 +23,6 @@ var addrMap = {};									// {nickname: SHA-1}
 var sliceQueue = [];								// Queen of data slice
 var sendingSlice = ''								// The sign of sending slice
 var sliceCounter = [0, 0];							// [numSent, numTotal]
-var dataSlices = [];
 
 var encryptMode = false;							// Using ETE or not
 var publicKeyCache = '@';							// Public key of another user
@@ -60,7 +60,7 @@ function getCookie(key) {
 function randomStr(length, symbol=true) {
 	var gen = '';
 	if (symbol) {
-		var charLib = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`~!@#$%^&*()_-+=|';
+		var charLib = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&*?@~-';
 	} else {
 		var charLib = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	}
@@ -326,7 +326,6 @@ function fileExtCheck(fileInputLable, extNames) {
 // ===== Init ======================================
 formStatusSet(false);
 
-// $('#s_server').val(getCookie('server'));
 $('#s_pvk').val(getCookie('pvk'));
 
 var fileSelector = document.getElementById('fileSelector');
@@ -338,6 +337,8 @@ var fileSelector = document.getElementById('fileSelector');
 // -- Click "New ID"
 $('#btn_auto').click(function () {
 
+	$('#btn_auto').prop('disabled', true);
+	$('#btn_enter').prop('disabled', true);
 	$('#s_pvk').val(randomStr(64));
 	showMsg('A new key will be generated. Please save it by yourself.', 'gray');
 	$('#btn_enter').click();
@@ -346,6 +347,8 @@ $('#btn_auto').click(function () {
 
 // -- Click "Login"
 $('#btn_enter').click(function () {
+	$('#btn_auto').prop('disabled', true);
+	$('#btn_enter').prop('disabled', true);
 
 	// -- Check if pvk's formate is correct
 	if ($('#s_pvk').val().length === 64) {
