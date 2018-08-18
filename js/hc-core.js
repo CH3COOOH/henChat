@@ -166,6 +166,7 @@ function newSession(server) {
 					ws.send(JSON.stringify(keyExchangeRequest));
 					encryptMode = true;
 
+					addReceiverFromSession(getMsg.from);
 					$('#s_to').val(getMsg.from);
 					$('#s_to').prop('disabled', true);
 					$('#btn_encrypt').prop('disabled', true);
@@ -235,10 +236,17 @@ function showMsg(msg, color="black") {
 
 	if (typeof(msg) === 'object') {
 		var now = new Date(parseInt(msg.time));
+		strFrom = (function () {
+			if (msg.from.indexOf('->') === -1) {
+				return `<a href="javascript:addReceiverFromSession('${msg.from}')">${msg.from}</a>`;
+			} else {
+				return msg.from;
+			}
+		})();
 
 		// -- Not in encrypt mode or the message is from the user
 		if (encryptMode === false || color === 'green') {
-			var strHead = `${now.toString()}<br>[${msg.from}]<br>`;
+			var strHead = `${now.toString()}<br>[${strFrom}]<br>`;
 			showText = `${strHead}<font color="${color}">${xssAvoid(msg.msg).split('\n').join('<br>')}</font><br>`;
 		
 		// -- In encrypt mode
@@ -326,8 +334,6 @@ function fileExtCheck(fileInputLable, extNames) {
 
 // ===== Init ======================================
 formStatusSet(false);
-
 $('#s_pvk').val(getCookie('pvk'));
-
 var fileSelector = document.getElementById('fileSelector');
 // =================================================

@@ -36,16 +36,22 @@ $('#btn_enter').click(function () {
 // -- Click "ETE"
 $('#btn_encrypt').click(function () {
 
-	if ($('#s_to').val() === '') {
+	var receiver = '';
+	for (c of contacts) {
+		if ($(`#${c}`).prop('checked')) {
+			receiver = c;
+		}
+	}
+	if (receiver === '') {
 		alert('There is no receiver in the list...');
 		return -1;
 	}
 
 	$('#s_to').prop('disabled', true);					// Forbid multi-receiver
-	// $('#fileSelector').prop('disabled', true);		// Forbid file sender (now there is no need to do this)
 	$('#btn_encrypt').prop('disabled', true);			// Forbid ETE button
 	$('#btn_send').prop('disabled', true);				// Temporary block ETE button
-	var receiver = $('#s_to').val().split('\n')[0];		// Fix receiver as the 1st receiver
+	$(`#${receiver}`).prop('checked', true);						// Fix receiver as the 1st receiver
+	$(`#${receiver}`).prop('disabled', true);
 
 	var now = new Date();
 	var keyExchangeRequest = {
@@ -85,16 +91,11 @@ $('#btn_send').click(function () {
 
 		// Msg infomation
 		var now = new Date();
-		var sendLstWithName = $('#s_to').val().split('\n');
 		var sendLst = [];
 
 		// -- Make receivers' list
-		for (c of sendLstWithName) {
-			if (c.indexOf('#') != -1) {					// Receiver address with nickname
-				var [nickname, addr] = c.split('#');
-				sendLst.push(addr);
-				addrMap[addr] = nickname;
-			} else {
+		for (c of contacts) {
+			if ($(`#${c}`).prop('checked')) {
 				sendLst.push(c);
 			}
 		}
@@ -178,7 +179,7 @@ $('#btn_send').click(function () {
 						time: now.getTime().toString()
 					}
 					var contentWithImg_show = {
-						from: eteSign + $('#s_pbk').val(),
+						from: eteSign + $('#s_pbk').val() + ' -> ' + sendLst.toString(),
 						msg: $('#s_send').val(),
 						img: data,
 						time: now.getTime().toString()
@@ -207,8 +208,9 @@ $('#btn_send').click(function () {
 					token: sToken,
 					time: now.getTime().toString()
 				}
+
 				var content_show = {
-					from: eteSign + $('#s_pbk').val(),
+					from: eteSign + $('#s_pbk').val() + ' -> ' + sendLst.toString(),
 					msg: $('#s_send').val(),
 					time: now.getTime().toString()
 				}
@@ -245,4 +247,24 @@ document.onkeydown = function (e) {
 	if (e.key != prevKey) {
 		prevKey = e.key;
 	}
+}
+
+// ===== Add Contacts ===============================
+contacts = [];
+function addReceiver() {
+	var newReceiver = $('#s_to').val();
+	if (newReceiver === '' || contacts.indexOf(newReceiver) != -1) {
+		return -1;
+	}
+	contacts.push(newReceiver);
+	$('#receiverChoice').prepend(`<input type="checkbox" id="${newReceiver}" checked="checked"/>${newReceiver}<br>`);
+	$('#s_to').val('');
+}
+
+function addReceiverFromSession(cid) {
+	if (contacts.indexOf(cid) != -1) {
+		return -1;
+	}
+	contacts.push(cid);
+	$('#receiverChoice').prepend(`<input type="checkbox" id="${cid}" checked="checked"/>${cid}<br>`);
 }

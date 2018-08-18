@@ -5,6 +5,12 @@
 	height: 425px;
 	overflow: auto;
 }
+#receiverChoice{
+	width: 100%;
+	height: 400px;
+	overflow: auto;
+}
+
 </style>
 <head>
 	<title>henChat</title>
@@ -36,7 +42,16 @@
     <td height="100%" align="center" bgcolor="#999999">Message</td>
   </tr>
   <tr>
-    <td width="20%" height="300" align="left" valign="top" bgcolor="#CCCCCC"><textarea name="s_to" cols="16" rows="28" class="form_input" id="s_to"></textarea></td>
+    <td width="20%" height="300" align="left" valign="top" bgcolor="#CCCCCC"><table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td nowrap>
+          <input type="text" id="s_to" size="20",>
+          <a href="javascript:addReceiver()">add</a></td>
+        </tr>
+        <tr>
+          <td><div id="receiverChoice"></div></td>
+        </tr>
+    </table></td>
 	<td height="300" align="left" valign="top" bgcolor="#FBFBFB" >
     	<div id="log"></div>
 	</td>
