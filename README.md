@@ -1,10 +1,11 @@
-# henChat (Latest update: 2018.06.09)
-A simple IM (?) based on websocket.<br>
+# henChat (Latest update: 2018.08.18)
+A simple IM (?) based on websocket, looks like ↓<br>
+![view](henChat.jpeg)
 ## Deployment
 
 ### Python-Server
 
-hcServer.py is the server. It works with azLib.py and websocket_server/.
+hcServer.py is the server. It works with websocket_server/.
 
 ### Node.js-Server
 
@@ -19,7 +20,7 @@ node app.js
 
 ### Client
 
-Index.html works as interface, which also needs jsRSA.js(crypto support) and hc-core.js.<br>
+Index.html works as interface, which also needs rsa.js (crypto support), hc-core.js and listener.js in folder "js".<br>
 And a HTTP server is necessary. Even though end-to-end encryption is supported since 2018.04.05, you'd better deploy it with TLS protection.
 
 ## Reference

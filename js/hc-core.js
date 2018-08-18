@@ -5,8 +5,9 @@
 // 2018.04.05: End-to-end encryption realized (plain text only)
 // 2018.04.06: ETE now supports attachements; add key hash comparision (MITM block)
 // 2018.08.16: Prevent repeat click on login and newid button
+// 2018.08.18: Adapt new receiver selecting logic
 
-var CLIENT_VER = '180816';
+var CLIENT_VER = '180818';
 
 // var DEFAULT_SERVER = 'wss://us2.srdmobile.tk';
 var DEFAULT_SERVER = 'ws://localhost:9001';
