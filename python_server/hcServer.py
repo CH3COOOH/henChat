@@ -16,11 +16,25 @@ import hashlib
 import json
 
 from websocket_server import WebsocketServer
-import azLib as al
 
 SERVER_VER = '180816'
 MAX_ONLINE = 15
 WHITELIST = []				# Client(sha-1) in WHITELIST would not be limited by MAX_ONLINE
+
+
+def timeNow():
+	import datetime
+	now = datetime.datetime.now()
+	return {'YY': now.strftime('%Y'),
+			'MM': now.strftime('%m'),
+			'DD': now.strftime('%d'),
+			'hh': now.strftime('%H'),
+			'mm': now.strftime('%M'),
+			'ss': now.strftime('%S')}
+
+def log(text):
+	ct = timeNow()
+	print('[%s.%s.%s-%s:%s:%s] %s' % (ct['YY'], ct['MM'], ct['DD'], ct['hh'], ct['mm'], ct['ss'], text))
 
 
 def randStr(length):
@@ -56,16 +70,16 @@ class HCS:
 	def newClient(self, client, server):
 		self.online_total += 1
 		client['id'] = str(time.time())
-		al.log('New client comes at %s. There are %d clients online.' % (client['id'], self.online_total))
+		log('New client comes at %s. There are %d clients online.' % (client['id'], self.online_total))
 
 
 	def clientLeft(self, client, server):
 		self.online_total -= 1
-		al.log('ID: [%s] left. There are %d clients online.' % (client['id'], self.online_total))
+		log('ID: [%s] left. There are %d clients online.' % (client['id'], self.online_total))
 		try:
 			del(self.onlineLst[client['id']])
 		except:
-			al.log('ID: [%s] has already been removed.' % client['id'])
+			log('ID: [%s] has already been removed.' % client['id'])
 
 
 	def msgReceived(self, client, server, msg):
@@ -169,7 +183,7 @@ class HCS:
 
 				else:
 					# Sender identify failed
-					al.log('%s is an invalid token.' % d_msg['token'])
+					log('%s is an invalid token.' % d_msg['token'])
 					self._reply(server, 'err', 'Auth failed.', client)
 
 		except:
@@ -178,7 +192,7 @@ class HCS:
 
 
 	def start(self):
-		al.log('Launch a server on port %d...' % self.port)
+		log('Launch a server on port %d...' % self.port)
 		server = WebsocketServer(self.port, host=self.host)
 		server.set_fn_new_client(self.newClient)
 		server.set_fn_client_left(self.clientLeft)

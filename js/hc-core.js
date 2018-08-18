@@ -8,12 +8,13 @@
 
 var CLIENT_VER = '180816';
 
-var DEFAULT_SERVER = 'wss://us2.srdmobile.tk';
+// var DEFAULT_SERVER = 'wss://us2.srdmobile.tk';
+var DEFAULT_SERVER = 'ws://localhost:9001';
 
 var SLICE_THRESHOLD = 40960;						// Data whose length(base64) over this amount will be splited
 var MAX_DATALENTH = SLICE_THRESHOLD*100;			// Max data length(base64)
 var MAX_TXTLENGTH = 2048;							// Max character in message
-var enabledFileExts = ['.jpg', '.gif', '.png'];		// Supported file formate
+var enabledFileExts = ['.jpg', '.gif', '.png', 'jpeg'];		// Supported file formate
 var buffer = {};									// Used to receive coming slices and combine them
 
 var ws;												// Websocket
@@ -253,9 +254,9 @@ function showMsg(msg, color="black") {
 			if (msg['rest'] === undefined) {
 
 				if (encryptMode === false || color === 'green') {
-					showText += `<img src="${msg.img}"><br>`;
+					showText += `<img src="${msg.img}" width="200"><br>`;
 				} else {
-					showText += `<img src="${rsaDecrypt(msg.img, selfPrivateKey, true)}"><br>`;
+					showText += `<img src="${rsaDecrypt(msg.img, selfPrivateKey, true)}" width="200"><br>`;
 				}
 				showText += '<br>';
 				log.prepend(showText);
@@ -274,7 +275,7 @@ function showMsg(msg, color="black") {
 
 				// -- Transfer finished
 				if (msg['rest'] <= 0) {
-					showText += `<img src="${buffer[msg.sign]}" width="400"><br>`;
+					showText += `<img src="${buffer[msg.sign]}" width="200"><br>`;
 					showText += '<br>';
 					log.prepend(showText);
 					delete(buffer[msg.sign]);					// Clean buffer
