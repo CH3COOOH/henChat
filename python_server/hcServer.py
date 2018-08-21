@@ -10,6 +10,7 @@
 # 2018.03.02: Now can send sliced data (big files supported)
 # 2018.03.05: Add user whitelist mode
 # 2018.08.16: Shorten the PBK
+# 2018.08.21: Fix a bug in user counting logic; Reboot when error
 
 import time
 import hashlib
@@ -17,7 +18,7 @@ import json
 
 from websocket_server import WebsocketServer
 
-SERVER_VER = '180816'
+SERVER_VER = '180821'
 MAX_ONLINE = 15
 WHITELIST = []				# Client(sha-1) in WHITELIST would not be limited by MAX_ONLINE
 
@@ -34,8 +35,13 @@ def timeNow():
 
 def log(text):
 	ct = timeNow()
-	print('[%s.%s.%s-%s:%s:%s] %s' % (ct['YY'], ct['MM'], ct['DD'], ct['hh'], ct['mm'], ct['ss'], text))
+	strGen = '[%s.%s.%s-%s:%s:%s] %s' % (ct['YY'], ct['MM'], ct['DD'], ct['hh'], ct['mm'], ct['ss'], text)
+	print(strGen)
+	return strGen
 
+def logWrite(text, savName):
+	with open(savName, 'a') as o:
+		o.write(text+'\n')
 
 def randStr(length):
 	from random import choice
@@ -50,14 +56,17 @@ class HCS:
 		self.port = port
 		self.onlineLst = {}				# {sha-1: [client, token]}
 		self.msgLst = {}				# {sha-1: [(obj)Msg]}
-		self.online_total = 0			# Current online users
 
 
 	def _getClientById(self, cid):
-		for i in self.onlineLst.keys():
-			if cid == i:
-				return self.onlineLst[i][0]
-		return None
+		if cid in self.onlineLst.keys():
+			return self.onlineLst[cid][0]
+		else:
+			return None
+		# for i in self.onlineLst.keys():
+		# 	if cid == i:
+		# 		return self.onlineLst[i][0]
+		# return None
 
 
 	def _reply(self, server, typE, content, reciver):
@@ -67,15 +76,15 @@ class HCS:
 		server.send_message(reciver, json.dumps(reply))
 
 
-	def newClient(self, client, server):
-		self.online_total += 1
-		client['id'] = str(time.time())
-		log('New client comes at %s. There are %d clients online.' % (client['id'], self.online_total))
+	# def newClient(self, client, server):
+	# 	self.online_total += 1
+	# 	client['id'] = str(time.time())
+	# 	log('New client comes at %s. There are %d clients online.' % (client['id'], self.online_total))
 
 
 	def clientLeft(self, client, server):
-		self.online_total -= 1
-		log('ID: [%s] left. There are %d clients online.' % (client['id'], self.online_total))
+		# self.online_total -= 1
+		# log('ID: [%s] left. There are %d clients online.' % (client['id'], self.online_total))
 		try:
 			del(self.onlineLst[client['id']])
 		except:
@@ -105,7 +114,7 @@ class HCS:
 				pvk = d_msg['msg']
 				cid = hashlib.sha1(pvk).hexdigest()[:10]
 
-				if (self.online_total < MAX_ONLINE) or (cid in WHITELIST):
+				if (len(self.onlineLst.keys()) < MAX_ONLINE) or (cid in WHITELIST):
 					
 					if cid in self.onlineLst.keys():
 						# Multi-device online is not supported
@@ -130,7 +139,6 @@ class HCS:
 				else:
 					self._reply(server, 'err', 'Too many clients online. (MAX=%d)' % MAX_ONLINE, client)
 
-			
 			elif d_msg['type'] == 'msg':
 				# ===== Man page of type 'msg' ===
 				# When a new message comes, the server does not change its content but delete key 'token' and 'to'.
@@ -194,7 +202,7 @@ class HCS:
 	def start(self):
 		log('Launch a server on port %d...' % self.port)
 		server = WebsocketServer(self.port, host=self.host)
-		server.set_fn_new_client(self.newClient)
+		# server.set_fn_new_client(self.newClient)
 		server.set_fn_client_left(self.clientLeft)
 		server.set_fn_message_received(self.msgReceived)
 		server.run_forever()
@@ -202,11 +210,19 @@ class HCS:
 
 
 def main():
-	a1 = HCS(9001)
+	a1 = HCS(9001, '127.0.0.1')
 	a1.start()
 
 
 
 if __name__ == '__main__':
-	main()
+	# main()
+	while True:
+		try:
+			main()
+		except:
+			logWrite(log('Server restart since error.'), 'error.log')
+			time.sleep(5)
+
+
 
