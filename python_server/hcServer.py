@@ -10,10 +10,12 @@
 # 2018.03.02: Now can send sliced data (big files supported)
 # 2018.03.05: Add user whitelist mode
 # 2018.08.16: Shorten the PBK
+# 2020.09.05: Set host and port via CLI parameters
 
 import time
 import hashlib
 import json
+import sys
 
 from websocket_server import WebsocketServer
 
@@ -201,12 +203,16 @@ class HCS:
 
 
 
-def main():
-	a1 = HCS(9001)
+def main(host, port):
+	a1 = HCS(port, host)
 	a1.start()
 
 
 
 if __name__ == '__main__':
-	main()
+    if len(sys.argv) < 2:
+        main(host='127.0.0.1', port=9001)
+    else:
+        h, p = sys.argv[1].split(':')
+        main(h, int(p))
 
