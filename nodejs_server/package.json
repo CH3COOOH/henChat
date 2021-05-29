@@ -10,6 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "js-randstr": "^1.0.2",
-    "ws": "^5.2.0"
+    "ws": "^7.4.6"
   }
 }
