@@ -195,7 +195,7 @@ class HCS:
 
 	def start(self):
 		log('Launch a server on port %d...' % self.port)
-		server = WebsocketServer(self.port, host=self.host)
+		server = WebsocketServer(port=self.port, host=self.host)
 		server.set_fn_new_client(self.newClient)
 		server.set_fn_client_left(self.clientLeft)
 		server.set_fn_message_received(self.msgReceived)
