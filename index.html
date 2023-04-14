@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>henChatW</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<!-- Portable devices support -->
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0, user-scalable=no"/>
+	<style type="text/css">
+		<!--
+		body,td,th {
+			font-family: Microsoft YaHei UI;
+		}
+		.form_input {
+			width: 100%;
+		}
+		-->
+	</style>
+</head>
+
+<body>
+<div>
+<table width="100%" border="0" id="container">
+
+  <tr><td height="100%" align="left">
+	<label>MESSAGE BOARD</label>
+    <textarea rows="10" class="form_input" id="output_msg" disabled></textarea>
+  </td></tr>
+  
+  <tr><td height="100%" align="left">
+	<label>MSG</label>
+    <textarea rows="4" class="form_input" id="input_msg"></textarea>
+  </td></tr>
+  
+  <tr><td height="100%" align="left">
+    <button id="btn_send">SEND</button>
+	<button id="btn_open">OPEN</button>
+  </td></tr>
+  
+  <tr><td height="100%" align="left">
+  <fieldset><legend>ROOM INFO</legend>
+    <label>CH</label><input type="text" class="form_input" id="input_ch" maxlength="16" disabled><br>
+	<label>MYID</label><input type="text" class="form_input" id="input_svc" maxlength="16" disabled><br>
+	<label>MQTT</label><input type="text" class="form_input" id="input_mqtt" maxlength="16" disabled><br>
+	<label>HENCHAT</label><input type="text" class="form_input" id="input_henchat" maxlength="16" disabled>
+  </fieldset>
+  </td></tr>
+
+</table>
+</div>
+
+<input id="hide_what2copy" style="opacity: 0;position: absolute;">
+
+<script src="js/crypto-js/crypto-js.js"></script>
+<script src="js/hcw-core.js"></script>
+<script src="js/event.js"></script>
+</body>
+</html>
