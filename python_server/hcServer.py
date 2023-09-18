@@ -11,6 +11,7 @@
 # 2018.03.05: Add user whitelist mode
 # 2018.08.16: Shorten the PBK
 # 2020.09.05: Set host and port via CLI parameters
+# 2023.09.18: Solve the encoding issue
 
 import time
 import hashlib
@@ -19,7 +20,7 @@ import sys
 
 from websocket_server import WebsocketServer
 
-SERVER_VER = '180816'
+SERVER_VER = '180816(230918)'
 MAX_ONLINE = 15
 WHITELIST = []				# Client(sha-1) in WHITELIST would not be limited by MAX_ONLINE
 
@@ -105,7 +106,7 @@ class HCS:
 			if d_msg['type'] == 'login':
 
 				pvk = d_msg['msg']
-				cid = hashlib.sha1(pvk).hexdigest()[:10]
+				cid = hashlib.sha1(pvk.encode('utf-8')).hexdigest()[:10]
 
 				if (self.online_total < MAX_ONLINE) or (cid in WHITELIST):
 					
