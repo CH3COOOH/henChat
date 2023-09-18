@@ -11,7 +11,7 @@
 # 2018.03.05: Add user whitelist mode
 # 2018.08.16: Shorten the PBK
 # 2020.09.05: Set host and port via CLI parameters
-# 2023.09.18: Solve the encoding issue
+# 2023.09.18: Solve the encoding issue; Python3 available
 
 import time
 import hashlib
@@ -43,7 +43,7 @@ def log(text):
 def randStr(length):
 	from random import choice
 	randPool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&*?@~-'
-	return ''.join(choice(randPool) for _ in xrange(length))
+	return ''.join(choice(randPool) for _ in range(length))
 
 
 class HCS:
